@@ -1,9 +1,10 @@
 pub mod cell;
 pub mod header;
 
-use rand::Rng;
-use crate::header::*;
 use crate::cell::*;
+use crate::header::*;
+use rand::Rng;
+use std::io;
 
 fn print_grid(grid: &Vec<Cell>) {
     const SPACE: usize = 3;
@@ -23,7 +24,7 @@ fn print_grid(grid: &Vec<Cell>) {
                         CellType::Field(num) => format!("{}", num),
                     }
                 } else {
-                    format!("##")
+                    format!("#")
                 }
             };
             print!(" {:^SPACE$} ", shown);
@@ -34,9 +35,16 @@ fn print_grid(grid: &Vec<Cell>) {
 
 fn main() {
     let mut grid: Vec<Cell> = Vec::new();
+    let mut _bomb_amount: usize = 0;
+
     for _i in 0..W * H {
         let choice = rand::thread_rng().gen_range(1..=100);
-        grid.push(new(choice >= 75));
+        if choice >= 75 {
+            grid.push(new(true));
+            _bomb_amount += 1;
+        } else {
+            grid.push(new(false));
+        }
     }
 
     for y in 0..H {
@@ -56,6 +64,53 @@ fn main() {
                     }
                 }
             }
+        }
+    }
+
+    'game_loop: loop {
+        print_grid(&grid);
+
+        println!("Reveal(r) or flag(f)?");
+        let mut r_or_f = String::new();
+        io::stdin().read_line(&mut r_or_f).expect("Failed to read line.");
+        let r_or_f = r_or_f.trim();
+
+        println!("Choose a spot to {}. (x-ENT-y-ENT)", match r_or_f {
+            "r" => String::from("reveal"),
+            "f" => String::from("flag"),
+            _ => {
+                println!("Invalid choice");
+                continue 'game_loop;
+            }
+        });
+
+        let mut pos_x = String::new();
+        io::stdin().read_line(&mut pos_x).expect("Failed to read line");
+        let mut pos_y = String::new();
+        io::stdin().read_line(&mut pos_y).expect("Failed to read line");
+
+        let pos_x: i32 = pos_x.trim().parse().expect("Not a number");
+        let pos_x = pos_x - 1;
+        let pos_y: i32 = pos_y.trim().parse().expect("Not a number");
+        let pos_y = pos_y - 1;
+
+        match r_or_f {
+            "r" => {
+                if grid[index(pos_x, pos_y)].reveal() {
+                    println!("You lost!");
+                    break 'game_loop;
+                }
+            }
+            "f" => {
+                if grid[index(pos_x, pos_y)].flag() {
+                    _bomb_amount -= 1;
+                    if _bomb_amount == 0 {
+                        println!("You win!");
+                        break 'game_loop;
+                    }
+                }
+            }
+            _ => println!("Invalid input"),
         }
     }
     print_grid(&grid);
