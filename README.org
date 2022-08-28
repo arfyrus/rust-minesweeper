@@ -15,3 +15,7 @@ You can change the constants in =config.rs= to fit your liking.
 - =H=: Height of the grid. Default: =15=.
 - =DISPLAY_SPACE=: How much space to display cells. Can't be lower than =5=. Preferably an odd number. Default: =5=.
 - =BOMB_PERCENT=: Percentage that a cell would be a bomb. Default: =75=.
+
+** Features to add
+
+- When you reveal a cell with value 0, it reveals all cells around it recursively.
