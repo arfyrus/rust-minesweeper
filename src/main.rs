@@ -1,10 +1,14 @@
 pub mod cell;
-pub mod header;
+pub mod config;
 
 use crate::cell::*;
-use crate::header::*;
+use crate::config::*;
 use rand::Rng;
 use std::io;
+
+fn index(x: i32, y: i32) -> usize {
+    (x + y * W) as usize
+}
 
 fn print_grid(grid: &mut Vec<Cell>) {
     const SPACE: usize = DISPLAY_SPACE;
