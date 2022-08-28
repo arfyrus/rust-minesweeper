@@ -6,28 +6,35 @@ use crate::header::*;
 use rand::Rng;
 use std::io;
 
-fn print_grid(grid: &Vec<Cell>) {
-    const SPACE: usize = 3;
+fn print_grid(grid: &mut Vec<Cell>) {
+    const SPACE: usize = DISPLAY_SPACE;
     for y in -1..H {
         for x in -1..W {
             if y == -1 {
-                print!("[{:=^SPACE$}]", x + 1);
+                print!("[{:=^width$}]", x + 1, width = SPACE - 2);
                 continue;
             } else if x == -1 {
-                print!("[{:=^SPACE$}]", y + 1);
+                print!("[{:=^width$}]", y + 1, width = SPACE - 2);
                 continue;
             }
             let shown: String = {
                 if grid[index(x, y)].reveal {
                     match grid[index(x, y)].ctype {
-                        CellType::Bomb => format!("B"),
+                        CellType::Bomb => format!("(*)"),
                         CellType::Field(num) => format!("{}", num),
                     }
+                } else if grid[index(x, y)].flag {
+                    format!("%")
                 } else {
                     format!("#")
                 }
             };
-            print!(" {:^SPACE$} ", shown);
+            if grid[index(x, y)].last_sel {
+                print!(">{:^width$}<", shown, width = SPACE - 2);
+                grid[index(x, y)].last_sel = false;
+            } else {
+                print!("{:^SPACE$}", shown);
+            }
         }
         print!("\n");
     }
@@ -39,7 +46,7 @@ fn main() {
 
     for _i in 0..W * H {
         let choice = rand::thread_rng().gen_range(1..=100);
-        if choice >= 75 {
+        if choice >= BOMB_PERCENT {
             grid.push(new(true));
             _bomb_amount += 1;
         } else {
@@ -68,7 +75,7 @@ fn main() {
     }
 
     'game_loop: loop {
-        print_grid(&grid);
+        print_grid(&mut grid);
 
         println!("Reveal(r) or flag(f)?");
         let mut r_or_f = String::new();
@@ -96,12 +103,14 @@ fn main() {
 
         match r_or_f {
             "r" => {
+                grid[index(pos_x, pos_y)].last_sel = true;
                 if grid[index(pos_x, pos_y)].reveal() {
                     println!("You lost!");
                     break 'game_loop;
                 }
             }
             "f" => {
+                grid[index(pos_x, pos_y)].last_sel = true;
                 if grid[index(pos_x, pos_y)].flag() {
                     _bomb_amount -= 1;
                     if _bomb_amount == 0 {
@@ -113,5 +122,9 @@ fn main() {
             _ => println!("Invalid input"),
         }
     }
-    print_grid(&grid);
+
+    for i in &mut grid {
+        i.reveal = true;
+    }
+    print_grid(&mut grid);
 }

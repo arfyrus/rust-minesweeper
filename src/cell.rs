@@ -5,6 +5,7 @@ pub enum CellType {
 
 pub struct Cell {
     pub reveal: bool,
+    pub last_sel: bool,
     pub flag: bool,
     pub ctype: CellType,
 }
@@ -35,6 +36,7 @@ pub fn new(bomb: bool) -> Cell {
     use CellType::*;
     Cell {
         reveal: false,
+        last_sel: false,
         flag: false,
         ctype: if bomb {
             Bomb
