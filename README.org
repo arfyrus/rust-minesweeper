@@ -2,12 +2,12 @@
 
 Minesweeper game created in Rust.
 
-* Features
+** Features
 
 - Configurable cell width, bomb percentage, and grid width and height.
 - Last selected cell is shown.
 
-* Configuration
+** Configuration
 
 You can change the constants in `config.rs` to fit your liking.
 
