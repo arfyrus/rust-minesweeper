@@ -18,4 +18,4 @@ You can change the constants in =config.rs= to fit your liking.
 
 ** Features to add
 
-- When you reveal a cell with value 0, it reveals all cells around it recursively.
+- [ ] When you reveal a cell with value 0, it reveals all cells around it recursively.
