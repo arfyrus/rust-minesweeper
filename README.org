@@ -1,0 +1,17 @@
+#+title: rust-minesweeper
+
+Minesweeper game created in Rust.
+
+* Features
+
+- Configurable cell width, bomb percentage, and grid width and height.
+- Last selected cell is shown.
+
+* Configuration
+
+You can change the constants in `config.rs` to fit your liking.
+
+- `W`: Width of the grid. Default: 15.
+- `H`: Height of the grid. Default: 15.
+- `DISPLAY_SPACE`: How much space to display cells. Can't be lower than 5. Preferably an odd number. Default: 5.
+- `BOMB_PERCENT`: Percentage that a cell would be a bomb. Default: 75.
