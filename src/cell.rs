@@ -9,29 +9,46 @@ pub struct Cell {
     pub ctype: CellType,
 }
 
-impl Cell {
-    // pub fn reveal(&mut self, pos: usize, grid: &mut [Cell]) {
-    //     if let CellType::Bomb = self.ctype {
-    //         return;
-    //     } else if self.reveal {
-    //         return;
+impl Cell {}
+
+pub fn reveal(cell: &mut Cell /*, x: i32, y: i32, grid: &mut Vec<Cell>*/) -> bool {
+    if let CellType::Bomb = cell.ctype {
+        return true;
+    }
+    if cell.reveal {
+        return false;
+    }
+    cell.reveal = true;
+    // if let CellType::Field(num) = cell.ctype {
+    //     if num > 0 {
+    //         return false;
     //     }
-    //     self.reveal = true;
-    //     for y in (1..=-1).rev() {
-    //         for x in (1..=-1).rev() {
-    //             let index: usize = super::header::index(x as i32, y as i32) as usize;
-    //             let _chosen = grid[pos + index];
-    //             // println!("{}", chosen);
+    // }
+    // for y2 in -1..=1 {
+    //     for x2 in -1..=1 {
+    //         if x + x2 >= 0 && y + y2 >= 0 && x + x2 < super::header::W && x + y2 < super::header::H {
+    //             let mut grid2 = &mut *grid;
+    //             reveal(
+    //                 &mut grid2[super::header::index(x + x2, y + y2)],
+    //                 x + x2,
+    //                 y + y2,
+    //                 &mut grid2
+    //             );
     //         }
     //     }
     // }
+    return false;
 }
 
 pub fn new(bomb: bool) -> Cell {
     use CellType::*;
     Cell {
-        reveal: true,
+        reveal: false,
         flag: false,
-        ctype: if bomb { Bomb } else { Field(0) },
+        ctype: if bomb {
+            Bomb
+        } else {
+            Field(0)
+        },
     }
 }
