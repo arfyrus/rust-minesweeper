@@ -25,12 +25,18 @@ fn print_grid(grid: &mut Vec<Cell>) {
                 if grid[index(x, y)].reveal {
                     match grid[index(x, y)].ctype {
                         CellType::Bomb => format!("(*)"),
-                        CellType::Field(num) => format!("{}", num),
+                        CellType::Field(num) => {
+                            if num == 0 {
+                                format!(" ")
+                            } else {
+                                format!("{}", num)
+                            }
+                        },
                     }
                 } else if grid[index(x, y)].flag {
                     format!("%")
                 } else {
-                    format!("#")
+                    format!(": :")
                 }
             };
             if grid[index(x, y)].last_sel {
